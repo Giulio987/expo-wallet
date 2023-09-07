@@ -80,10 +80,13 @@ android {
 }
 
 repositories {
-  mavenCentral()
+  google()
+  mavenLocal()
+  jcenter()
 }
 
 dependencies {
   implementation project(':expo-modules-core')
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${getKotlinVersion()}"
+  implementation "com.google.android.gms:play-services-pay:16.0.3"
 }
