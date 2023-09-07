@@ -1,4 +1,4 @@
-# React Native (Expo) Wallet Integration Module
+# React Native (Expo) Wallet Module
 
 This is a React Native module designed to simplify the integration of Wallet functionality for both iOS and Android using Expo. It allows you to add, and in the future, interact with all the features available on the iOS Wallet and Google Pay apps, within your React Native application.
 
