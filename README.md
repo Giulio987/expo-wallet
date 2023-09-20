@@ -19,27 +19,18 @@ yarn add expo-wallet
 
 ## Usage
 
-### Adding a Card to Wallet (iOS)
+###### iOS: The pass must be a base64 encoded string of the .pkpass file
 
-To add a card to the Wallet app, use the addPassFromBase64 method:
+###### Android: the pass must be a [token](https://codelabs.developers.google.com/add-to-wallet-android#0)
 
-```javascript
- const addToWallet = useCallback(async () => {
-    try {
-      const res = await ExpoWallet.addPassFromBase64(pass);
-    } catch (error) {
-    }
-  }, []);
-```
+### Adding a Card to Wallet
 
-### Adding a Card to Wallet (Android)
-
-To add a card to the Google Wallet app, use the addPassFromBase64 method:
+To add a card to the Wallet app, use the addPass method
 
 ```javascript
  const addToWallet = useCallback(async () => {
     try {
-      const res = await ExpoWallet.addPassFromToken(token);
+      const res = await ExpoWallet.addPass(pass);
     } catch (error) {
     }
   }, []);

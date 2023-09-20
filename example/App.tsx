@@ -1,40 +1,34 @@
 import { Button, Platform, StyleSheet, Text, View } from 'react-native';
 
 import * as ExpoWallet from 'expo-wallet';
-import { useCallback } from 'react';
 
 export default function App() {
-  const addToWallet = useCallback(async () => {
+  const addToWallet = async () => {
     try {
+      let res: boolean | Error = false;
       if (Platform.OS === 'ios') {
-        const res = await ExpoWallet.addPassFromBase64(pass);
-        if (res) {
-          console.log('Added to wallet');
-        } else {
-          console.log('Failed to add to wallet');
-        }
+        res = await ExpoWallet.addPass(pass);
       } else {
-        const isAvailable = await ExpoWallet.isAvailable();
-        if (!isAvailable) {
-          console.log('Wallet is not available');
-          return;
-        }
-        console.log('Wallet is available');
-        const res = await ExpoWallet.addPassFromToken(token);
-        if (res) {
-          console.log('Added to wallet');
-        } else {
-          console.log('Failed to add to wallet');
-        }
+        res = await ExpoWallet.addPass(token);
       }
     } catch (error) {
       console.log(error);
     }
-  }, []);
+  };
+
+  const isAvailable = async () => {
+    const res = await ExpoWallet.isAvailable();
+    if (res) {
+      alert('Available');
+    } else {
+      alert('Not available');
+    }
+  };
 
   return (
     <View style={styles.container}>
       <Button title="Add to wallet" onPress={addToWallet} />
+      <Button title="Verify" onPress={isAvailable} />
     </View>
   );
 }
