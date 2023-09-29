@@ -1,27 +1,39 @@
 import ExpoModulesCore
 import PassKit
 public class ExpoWalletModule: Module {
+  let library = PKPassLibrary()
   public func definition() -> ModuleDefinition {
     Name("ExpoWallet")
-    AsyncFunction("addPassFromBase64") { (value: String, promise: Promise) in
-      let library = PKPassLibrary()
-      let NSData = NSData(base64Encoded: value, options: NSData.Base64DecodingOptions.ignoreUnknownCharacters)
-
-      if PKPassLibrary.isPassLibraryAvailable(){
+    AsyncFunction("addPassFromFile") { (value: String,encoding: String, promise: Promise) in
+    let data:NSData
+    if(encoding == "base64"){
+      data = NSData(base64Encoded: value, options: NSData.Base64DecodingOptions.ignoreUnknownCharacters)
+    }else{
+        //TODO
+        
+      }
+      if PKPassLibrary.isPassLibraryAvailable() {
         do {
-          let pass = try PKPass(data: NSData! as Data)
+          let pass = try PKPass(data: data! as Data)
           library.addPasses([pass], withCompletionHandler: ((PKPassLibraryAddPassesStatus) -> Void)? {(status) in 
             if status == PKPassLibraryAddPassesStatus.didAddPasses {
               promise.resolve(true)
             } else {
-              promise.reject(Exception(name: "E_PASS_LIBRARY_UNAVAILABLE1", description: "Pass library unavailable"))
+              promise.reject(Exception(name: "E_PASS_LIBRARY_UNAVAILABLE1", description: "Cannot add pass"))
             }
           })
         } catch {
-          promise.reject(Exception(name: "E_PASS_LIBRARY_UNAVAILABLE2", description: "Pass library unavailable"))
+          promise.reject(Exception(name: "E_PASS_LIBRARY_UNAVAILABLE2", description: "Error creating pass from data"))
         }
       } else {
         promise.reject(Exception(name: "E_PASS_LIBRARY_UNAVAILABLE3", description: "Pass library unavailable"))
+      }
+    }
+    Function("isAvailable") { () -> Bool in
+      if PKPassLibrary.isPassLibraryAvailable(){
+        return true
+      } else {
+        return false
       }
     }
   }
