@@ -6,11 +6,7 @@ export default function App() {
   const addToWallet = async () => {
     try {
       let res: boolean | Error = false;
-      if (Platform.OS === 'ios') {
-        res = await ExpoWallet.addPass(pass);
-      } else {
-        res = await ExpoWallet.addPass(token);
-      }
+      res = await ExpoWallet.addPass(Platform.OS === 'ios' ? pass : token);
     } catch (error) {
       console.log(error);
     }

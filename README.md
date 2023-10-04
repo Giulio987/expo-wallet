@@ -28,13 +28,32 @@ yarn add expo-wallet
 To add a card to the Wallet app, use the addPass method
 
 ```javascript
- const addToWallet = useCallback(async () => {
+ const addToWallet = async () => {
     try {
       const res = await ExpoWallet.addPass(pass);
     } catch (error) {
     }
-  }, []);
+  };
 ```
+
+### Check if the Wallet is available
+
+To verify if the Wallet is available, use the isAvailable method
+
+```javascript
+ const isAvailable = async () => {
+    const res = await ExpoWallet.isAvailable();
+    if (res) {
+      alert('Available');
+    } else {
+      alert('Not available');
+    }
+  };
+```
+
+### Soon available:
+
+- Checking if a Card is in Wallet
 
 ## Contributing
 
