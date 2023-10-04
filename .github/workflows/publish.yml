@@ -16,6 +16,8 @@ jobs:
         with:
           node-version: 16
           registry-url: https://registry.npmjs.org
+      - name: install
+        run: npm install
       - name: publish
         run: npm publish --access public
         env:
