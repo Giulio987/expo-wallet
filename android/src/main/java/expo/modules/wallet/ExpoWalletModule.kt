@@ -20,7 +20,7 @@ class ExpoWalletModule : Module() {
 
   override fun definition() = ModuleDefinition {
     Name("ExpoWallet")
-    AsyncFunction("addPassFromToken") { token: String, promise: Promise ->
+    AsyncFunction("addPass") { token: String, promise: Promise ->
       try {
         if (currentActivity != null && walletClient != null) {
           walletClient.savePassesJwt(token, currentActivity, addToGoogleWalletRequestCode)
