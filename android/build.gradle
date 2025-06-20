@@ -41,3 +41,8 @@ android {
     abortOnError false
   }
 }
+
+dependencies {
+  implementation project(':expo-modules-core')
+  implementation "com.google.android.gms:play-services-pay:16.5.0"
+}

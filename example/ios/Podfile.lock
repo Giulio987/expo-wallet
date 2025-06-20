@@ -63,7 +63,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - ExpoWallet (0.1.0):
+  - ExpoWallet (0.1.5):
     - ExpoModulesCore
   - fast_float (6.1.4)
   - FBLazyVector (0.79.4)
@@ -1976,7 +1976,7 @@ SPEC CHECKSUMS:
   ExpoFont: abbb91a911eb961652c2b0a22eef801860425ed6
   ExpoKeepAwake: bf0811570c8da182bfb879169437d4de298376e7
   ExpoModulesCore: d431ffe83c8673d02cb38425594a5f5480fd3061
-  ExpoWallet: 0381a2515f7ba366d4c981223e6d97b800839d9b
+  ExpoWallet: 400330550e5582e51df4727801f8e07974b223f6
   fast_float: 06eeec4fe712a76acc9376682e4808b05ce978b6
   FBLazyVector: 15c28682af535aa55b9b31e64deff54b7ed7d453
   fmt: a40bb5bd0294ea969aaaba240a927bd33d878cdd

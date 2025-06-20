@@ -1,0 +1,8 @@
+{
+  "android": {
+    "package": "com.giuliom99.giulio987expowallet"
+  },
+  "ios": {
+    "bundleIdentifier": "com.giuliom99.giulio987expowallet"
+  }
+}

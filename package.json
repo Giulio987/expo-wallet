@@ -1,6 +1,6 @@
 {
-  "name": "expo-wallet",
-  "version": "0.1.0",
+  "name": "@giulio987/expo-wallet",
+  "version": "0.1.5",
   "description": "Expo wallet module",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -13,7 +13,9 @@
     "prepublishOnly": "expo-module prepublishOnly",
     "expo-module": "expo-module",
     "open:ios": "xed example/ios",
-    "open:android": "open -a \"Android Studio\" example/android"
+    "open:android": "open -a \"Android Studio\" example/android",
+    "android": "expo run:android",
+    "ios": "expo run:ios"
   },
   "keywords": [
     "react-native",
@@ -28,7 +30,11 @@
   "author": "Giulio Milani <giulio.milani99@gmail.com> (https://github.com/Giulio987)",
   "license": "MIT",
   "homepage": "https://github.com/Giulio987/expo-wallet#readme",
-  "dependencies": {},
+  "dependencies": {
+    "expo": "~53.0.12",
+    "react": "19.0.0",
+    "react-native": "0.79.4"
+  },
   "devDependencies": {
     "@types/react": "~19.0.0",
     "expo-module-scripts": "^4.1.6",

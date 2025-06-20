@@ -1,48 +1,40 @@
 import ExpoModulesCore
-
+import PassKit
 public class ExpoWalletModule: Module {
-  // Each module class must implement the definition function. The definition consists of components
-  // that describes the module's functionality and behavior.
-  // See https://docs.expo.dev/modules/module-api for more details about available components.
-  public func definition() -> ModuleDefinition {
-    // Sets the name of the module that JavaScript code will use to refer to the module. Takes a string as an argument.
-    // Can be inferred from module's class name, but it's recommended to set it explicitly for clarity.
-    // The module will be accessible from `requireNativeModule('ExpoWallet')` in JavaScript.
-    Name("ExpoWallet")
+    public func definition() -> ModuleDefinition {
+        Name("ExpoWallet")
+        AsyncFunction("addPass") { (value: String, promise: Promise) in
+            let library = PKPassLibrary()
+            let passData = NSData(base64Encoded: value, options: NSData.Base64DecodingOptions.ignoreUnknownCharacters)
 
-    // Sets constant properties on the module. Can take a dictionary or a closure that returns a dictionary.
-    Constants([
-      "PI": Double.pi
-    ])
-
-    // Defines event names that the module can send to JavaScript.
-    Events("onChange")
-
-    // Defines a JavaScript synchronous function that runs the native code on the JavaScript thread.
-    Function("hello") {
-      return "Hello world! 👋"
-    }
-
-    // Defines a JavaScript function that always returns a Promise and whose native code
-    // is by default dispatched on the different thread than the JavaScript runtime runs on.
-    AsyncFunction("setValueAsync") { (value: String) in
-      // Send an event to JavaScript.
-      self.sendEvent("onChange", [
-        "value": value
-      ])
-    }
-
-    // Enables the module to be used as a native view. Definition components that are accepted as part of the
-    // view definition: Prop, Events.
-    View(ExpoWalletView.self) {
-      // Defines a setter for the `url` prop.
-      Prop("url") { (view: ExpoWalletView, url: URL) in
-        if view.webView.url != url {
-          view.webView.load(URLRequest(url: url))
+            if PKPassLibrary.isPassLibraryAvailable(){
+                do {
+                    if let passData = passData as? Data {
+                        let pass = try PKPass(data: passData)
+                        library.addPasses([pass], withCompletionHandler: ((PKPassLibraryAddPassesStatus) -> Void)? {(status) in
+                            if status == PKPassLibraryAddPassesStatus.didAddPasses {
+                                promise.resolve(true)
+                            } else {
+                                promise.reject(Exception(name: "E_PASS_LIBRARY_CANNOT_ADD", description: "Cannot add the pass to the wallet"))
+                            }
+                        })
+                    } else {
+                        promise.reject(Exception(name: "E_PASS_LIBRARY_INVALID_DATA", description: "Invalid data for given pass"))
+                    }
+                } catch {
+                    print(error)
+                    promise.reject(Exception(name: "E_PASS_LIBRARY_GENERIC", description: "Error while adding pass to wallet"))
+                }
+            } else {
+                promise.reject(Exception(name: "E_PASS_LIBRARY_UNAVAILABLE", description: "Pass library unavailable"))
+            }
         }
-      }
-
-      Events("onLoad")
+        AsyncFunction("isAvailable") { (promise: Promise) in
+            if PKPassLibrary.isPassLibraryAvailable() {
+                promise.resolve(true)
+            }else{
+                promise.resolve(false)
+            }
+        }
     }
-  }
 }
