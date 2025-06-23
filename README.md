@@ -1,35 +1,66 @@
-# @giulio987/expo-wallet
+# React Native (Expo) Wallet Module
 
-Expo wallet module
+<img align="right" src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/google-wallet-icon.png" alt="wallet" width="100" height="100">
+<img align="right" src="https://upload.wikimedia.org/wikipedia/commons/a/a1/Wallet_App_icon_iOS_12.png?20181112025254" alt="wallet" width="100" height="100">
 
-# API documentation
+This is a React Native module designed to simplify the integration of Wallet functionality for both iOS and Android using Expo. It allows you to add, and in the future, interact with all the features available on the iOS Wallet and Google Pay apps, within your React Native application.
 
-- [Documentation for the latest stable release](https://docs.expo.dev/versions/latest/sdk/@giulio987/wallet/)
-- [Documentation for the main branch](https://docs.expo.dev/versions/unversioned/sdk/@giulio987/wallet/)
+## Installation
 
-# Installation in managed Expo projects
+To get started, follow this step:
+Install the module using npm or yarn:
 
-For [managed](https://docs.expo.dev/archive/managed-vs-bare/) Expo projects, please follow the installation instructions in the [API documentation for the latest stable release](#api-documentation). If you follow the link and there is no documentation available then this library is not yet usable within managed projects &mdash; it is likely to be included in an upcoming Expo SDK release.
-
-# Installation in bare React Native projects
-
-For bare React Native projects, you must ensure that you have [installed and configured the `expo` package](https://docs.expo.dev/bare/installing-expo-modules/) before continuing.
-
-### Add the package to your npm dependencies
-
-```
+```bash
 npm install @giulio987/expo-wallet
 ```
 
-### Configure for Android
+or
 
+```bash
+yarn add @giulio987/expo-wallet
+```
 
+## Usage
 
+#### iOS: The pass must be a base64 encoded string of the [.pkpass file](https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/PassKit_PG/YourFirst.html)
 
-### Configure for iOS
+#### Android: the pass must be a [token](https://developers.google.com/wallet/generic/android?hl=it) - here's the [codelab](https://codelabs.developers.google.com/add-to-wallet-android#0)
 
-Run `npx pod-install` after installing the npm package.
+### Adding a Card to Wallet
 
-# Contributing
+To add a card to the Wallet app, use the addPass method
 
-Contributions are very welcome! Please refer to guidelines described in the [contributing guide]( https://github.com/expo/expo#contributing).
+```javascript
+const addToWallet = async () => {
+  try {
+    const res = await ExpoWallet.addPass(Platform.OS === "ios" ? pass : token);
+  } catch (error) {}
+};
+```
+
+### Check if the Wallet is available
+
+To verify if the Wallet is available, use the isAvailable method
+
+```javascript
+const isAvailable = async () => {
+  const res = await ExpoWallet.isAvailable();
+  if (res) {
+    alert("Available");
+  } else {
+    alert("Not available");
+  }
+};
+```
+
+### Soon available:
+
+- Checking if a Card is in Wallet
+
+## Contributing
+
+Feel free to contribute to this project! If you have any feature requests, bug reports, or other contributions, please open an issue or submit a pull request.
+
+## License
+
+This module is released under the GPL-3.0 License.
