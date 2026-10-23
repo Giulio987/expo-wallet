@@ -5,6 +5,12 @@ on:
     branches:
       - master
 
+# Publishes with npm trusted publishing (OIDC): no NPM_AUTH_TOKEN secret needed.
+# The workflow file name must match the Trusted Publisher configured on npmjs.com.
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -14,11 +20,9 @@ jobs:
       - name: node
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
           registry-url: https://registry.npmjs.org
       - name: install
         run: npm ci
       - name: publish (prepublishOnly runs codegen and build)
         run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
