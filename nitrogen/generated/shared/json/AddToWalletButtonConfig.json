@@ -1,0 +1,11 @@
+{
+  "uiViewClassName": "AddToWalletButton",
+  "supportsRawText": false,
+  "bubblingEventTypes": {},
+  "directEventTypes": {},
+  "validAttributes": {
+    "buttonStyle": true,
+    "onPress": true,
+    "hybridRef": true
+  }
+}
