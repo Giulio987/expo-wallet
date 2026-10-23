@@ -1,66 +1,95 @@
-# React Native (Expo) Wallet Module
+# @giulio987/expo-wallet
 
-<img align="right" src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/google-wallet-icon.png" alt="wallet" width="100" height="100">
-<img align="right" src="https://upload.wikimedia.org/wikipedia/commons/a/a1/Wallet_App_icon_iOS_12.png?20181112025254" alt="wallet" width="100" height="100">
+<img align="right" hspace="10" src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/google-wallet-icon.png" alt="Google Wallet" width="120" height="120">
+<img align="right" hspace="10" src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/6d/0c/ef/6d0cefd3-4758-d4b9-0227-8cfea8a116ca/Placeholder.mill/400x400Icon.ApSiOS01-75.webp" alt="Apple Wallet" width="120" height="120">
 
-This is a React Native module designed to simplify the integration of Wallet functionality for both iOS and Android using Expo. It allows you to add, and in the future, interact with all the features available on the iOS Wallet and Google Pay apps, within your React Native application.
+Add passes to **Apple Wallet** and **Google Wallet** from React Native / Expo, and read the passes already in Apple Wallet. Built on [Nitro Modules](https://nitro.margelo.com) (JSI, no bridge).
+
+v1 is a rewrite: the module is no longer an Expo Module (`expo-modules-core`) but a Nitro module. It needs a development build, Expo Go is not supported.
 
 ## Installation
 
-To get started, follow this step:
-Install the module using npm or yarn:
-
 ```bash
-npm install @giulio987/expo-wallet
+npx expo install @giulio987/expo-wallet react-native-nitro-modules
+npx expo prebuild
 ```
 
-or
+Requires the New Architecture (default since Expo SDK 53) and Expo SDK 53+ / React Native 0.78+.
 
-```bash
-yarn add @giulio987/expo-wallet
+### Config plugin (iOS)
+
+`getPasses`, `containsPass` and `removePass` only see passes whose *pass type identifier* is listed in the app's `com.apple.developer.pass-type-identifiers` entitlement. The plugin adds it for you:
+
+```json
+{
+  "expo": {
+    "plugins": [
+      ["@giulio987/expo-wallet", { "passTypeIdentifiers": ["pass.com.example.mypass"] }]
+    ]
+  }
+}
 ```
+
+Without `passTypeIdentifiers` the plugin does nothing (the entitlement must be enabled on your App ID, so it is opt-in); existing identifiers are kept. The matching Pass Type ID must exist in your Apple Developer account and in the app's provisioning profile. Not using Expo? Add the entitlement in Xcode yourself.
 
 ## Usage
 
-#### iOS: The pass must be a base64 encoded string of the [.pkpass file](https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/PassKit_PG/YourFirst.html)
+```ts
+import ExpoWallet, { AddToWalletButton } from "@giulio987/expo-wallet";
 
-#### Android: the pass must be a [token](https://developers.google.com/wallet/generic/android?hl=it) - here's the [codelab](https://codelabs.developers.google.com/add-to-wallet-android#0)
+if (await ExpoWallet.isAvailable()) {
+  // iOS: base64 encoded .pkpass   Android: signed Google Wallet JWT
+  const added = await ExpoWallet.addPass(Platform.OS === "ios" ? pkpassBase64 : jwt);
+  // true = added, false = user cancelled
+}
 
-### Adding a Card to Wallet
+const passes = await ExpoWallet.getPasses(); // iOS only
 
-To add a card to the Wallet app, use the addPass method
-
-```javascript
-const addToWallet = async () => {
-  try {
-    const res = await ExpoWallet.addPass(Platform.OS === "ios" ? pass : token);
-  } catch (error) {}
-};
+<AddToWalletButton buttonStyle="black" onPress={() => ExpoWallet.addPass(payload)} />;
 ```
 
-### Check if the Wallet is available
+Named exports (`import { addPass } from ...`) are available too.
 
-To verify if the Wallet is available, use the isAvailable method
+| API | iOS | Android |
+| --- | --- | --- |
+| `isAvailable()` | PassKit available | Google Wallet API available |
+| `canAddPasses()` | yes | always `false` (use `isAvailable`) |
+| `addPass(data)` | base64 `.pkpass` | Google Wallet JWT |
+| `addPasses(data[])` | yes | rejects `UNSUPPORTED` |
+| `getPasses()` | yes (your pass type IDs) | rejects `UNSUPPORTED` |
+| `containsPass(typeId, serial)` | yes | rejects `UNSUPPORTED` |
+| `removePass(typeId, serial)` | yes | rejects `UNSUPPORTED` |
+| `<AddToWalletButton />` | `PKAddPassButton` | simple native button* |
 
-```javascript
-const isAvailable = async () => {
-  const res = await ExpoWallet.isAvailable();
-  if (res) {
-    alert("Available");
-  } else {
-    alert("Not available");
-  }
-};
+Google Wallet has no client API to list or remove saved passes, only a server-side REST API, hence the `UNSUPPORTED` rejections.
+
+\* The Android button is a plain black button. For production use, follow the [Google Wallet brand guidelines](https://developers.google.com/wallet/generic/resources/brand-guidelines) and use the official "Add to Google Wallet" asset.
+
+Errors are `WalletError`s with a `code` from `WALLET_ERRORS`, e.g. `if (e instanceof WalletError && e.code === WALLET_ERRORS.UNSUPPORTED)`.
+
+`addPass` resolves `true` if the pass was added (on iOS also if it was already in Wallet) and `false` if the user cancelled. `addPasses` resolves `true` only if every pass ended up in Wallet.
+
+## Example
+
+```bash
+cd example
+npm install
+npx expo prebuild
+npm run ios   # or: npm run android
 ```
 
-### Soon available:
+## Development
 
-- Checking if a Card is in Wallet
+```bash
+npm install
+npm run specs   # regenerates nitrogen/generated after editing src/specs/*.nitro.ts
+npm run build
+```
 
 ## Contributing
 
-Feel free to contribute to this project! If you have any feature requests, bug reports, or other contributions, please open an issue or submit a pull request.
+Issues and pull requests are welcome.
 
 ## License
 
-This module is released under the GPL-3.0 License.
+MIT

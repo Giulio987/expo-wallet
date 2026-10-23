@@ -1,0 +1,31 @@
+{
+  "$schema": "https://nitro.margelo.com/nitro.schema.json",
+  "cxxNamespace": ["expowallet"],
+  "ios": {
+    "iosModuleName": "ExpoWallet"
+  },
+  "android": {
+    "androidNamespace": ["expowallet"],
+    "androidCxxLibName": "ExpoWallet"
+  },
+  "autolinking": {
+    "Wallet": {
+      "ios": { "language": "swift", "implementationClassName": "HybridWallet" },
+      "android": {
+        "language": "kotlin",
+        "implementationClassName": "HybridWallet"
+      }
+    },
+    "AddToWalletButton": {
+      "ios": {
+        "language": "swift",
+        "implementationClassName": "HybridAddToWalletButton"
+      },
+      "android": {
+        "language": "kotlin",
+        "implementationClassName": "HybridAddToWalletButton"
+      }
+    }
+  },
+  "ignorePaths": ["**/node_modules"]
+}

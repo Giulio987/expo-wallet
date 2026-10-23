@@ -7,6 +7,9 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
+    "plugins": [
+      ["@giulio987/expo-wallet", { "passTypeIdentifiers": ["pass.com.example.wallet"] }]
+    ],
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
@@ -21,11 +24,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true,
       "package": "expo.modules.wallet.example"
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
     }
   }
 }
